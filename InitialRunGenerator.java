@@ -1,15 +1,19 @@
 import java.io.*;
 import java.util.*;
+import java.lang.System.Logger;
 
 public class InitialRunGenerator {
+    private static XSort.MrLogger logger = XSort.MrLogger.getInstance();
+
     public static List<File> createSortedRuns(InputStream input, int runSize) throws IOException {
+        logger.log(Logger.Level.DEBUG, "Creating sorted runs with run size " + runSize);
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         List<File> sortedRuns = new ArrayList<>();
         List<String> buffer = new ArrayList<>(runSize);
 
         String line;
         while ((line = reader.readLine()) != null) {
-            if(line.trim().isEmpty()) {
+            if (line.trim().isEmpty()) {
                 continue;
             }
             buffer.add(line);
@@ -25,6 +29,7 @@ public class InitialRunGenerator {
     }
 
     private static File writeSortedRun(List<String> buffer) throws IOException {
+        logger.log(Logger.Level.DEBUG, "Writing sorted run with " + buffer.size() + " records");
         heapsort(buffer);
         File tempFile = File.createTempFile("sortedRun", ".txt");
         tempFile.deleteOnExit();
@@ -40,6 +45,7 @@ public class InitialRunGenerator {
 
     // Heapsort implementation
     private static void heapsort(List<String> arr) {
+        logger.log(Logger.Level.DEBUG, "Sorting " + arr.size() + " records using heapsort");
         int n = arr.size();
         for (int i = n / 2 - 1; i >= 0; i--) {
             heapify(arr, n, i);
@@ -51,9 +57,12 @@ public class InitialRunGenerator {
     }
 
     private static void heapify(List<String> arr, int n, int i) {
+        logger.log(Logger.Level.TRACE, "Heapifying at index " + i);
         int largest = i, left = 2 * i + 1, right = 2 * i + 2;
-        if (left < n && arr.get(left).compareTo(arr.get(largest)) > 0) largest = left;
-        if (right < n && arr.get(right).compareTo(arr.get(largest)) > 0) largest = right;
+        if (left < n && arr.get(left).compareTo(arr.get(largest)) > 0)
+            largest = left;
+        if (right < n && arr.get(right).compareTo(arr.get(largest)) > 0)
+            largest = right;
         if (largest != i) {
             Collections.swap(arr, i, largest);
             heapify(arr, n, largest);

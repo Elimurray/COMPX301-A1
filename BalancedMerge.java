@@ -1,8 +1,12 @@
 import java.io.*;
 import java.util.*;
+import java.lang.System.Logger;
 
 public class BalancedMerge {
+    private static XSort.MrLogger logger = XSort.MrLogger.getInstance();
+
     public static void sort(List<File> runs, int mergeType) throws IOException {
+        logger.log(Logger.Level.DEBUG, "sortting " + runs.size() + " runs with merge type " + mergeType);
         while (runs.size() > 1) {
             List<File> mergedRuns = new ArrayList<>();
 
@@ -20,6 +24,7 @@ public class BalancedMerge {
     }
 
     private static File mergeFiles(List<File> inputFiles) throws IOException {
+        logger.log(Logger.Level.DEBUG, "Merging " + inputFiles.size() + " files");
         PriorityQueue<FileEntry> minHeap = new PriorityQueue<>();
         List<BufferedReader> readers = new ArrayList<>();
 
@@ -56,6 +61,7 @@ public class BalancedMerge {
     }
 
     private static void printToStdOut(File sortedFile) throws IOException {
+        logger.log(Logger.Level.DEBUG, "Printing sorted result to System.out");
         try (BufferedReader reader = new BufferedReader(new FileReader(sortedFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
