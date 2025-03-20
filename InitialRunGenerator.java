@@ -1,10 +1,19 @@
+// Alexander Trotter 1644272, Eli Murray 1626960
+
 import java.io.*;
-import java.util.*;
 import java.lang.System.Logger;
+import java.util.*;
 
 public class InitialRunGenerator {
     private static XSort.MrLogger logger = XSort.MrLogger.getInstance();
 
+    /**
+     * Reads input lines in chunks (runs) of given size, sorts each run, and writes to temporary files.
+     * @param input The input stream from which lines are read.
+     * @param runSize The size of each run (chunk) to sort.
+     * @return List of temporary files containing sorted runs.
+     * @throws IOException If an I/O error occurs.
+     */
     public static List<File> createSortedRuns(InputStream input, int runSize) throws IOException {
         logger.log(Logger.Level.DEBUG, "Creating sorted runs with run size " + runSize);
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -28,6 +37,12 @@ public class InitialRunGenerator {
         return sortedRuns;
     }
 
+    /**
+     * Sorts the provided buffer using heapsort and writes it to a temporary file.
+     * @param buffer List of strings to sort and write.
+     * @return A temporary file containing the sorted lines.
+     * @throws IOException If an I/O error occurs.
+     */
     private static File writeSortedRun(List<String> buffer) throws IOException {
         logger.log(Logger.Level.DEBUG, "Writing sorted run with " + buffer.size() + " records");
         heapsort(buffer);
@@ -43,7 +58,10 @@ public class InitialRunGenerator {
         return tempFile;
     }
 
-    // Heapsort implementation
+    /**
+     * Sorts a list of strings using the heapsort algorithm.
+     * @param arr List of strings to be sorted.
+     */
     private static void heapsort(List<String> arr) {
         logger.log(Logger.Level.DEBUG, "Sorting " + arr.size() + " records using heapsort");
         int n = arr.size();
@@ -56,6 +74,12 @@ public class InitialRunGenerator {
         }
     }
 
+    /**
+     * Maintains the heap property for the provided index in the array.
+     * @param arr List of strings representing the heap.
+     * @param n Size of the heap.
+     * @param i Index to heapify.
+     */
     private static void heapify(List<String> arr, int n, int i) {
         logger.log(Logger.Level.TRACE, "Heapifying at index " + i);
         int largest = i, left = 2 * i + 1, right = 2 * i + 2;
